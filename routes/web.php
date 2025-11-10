@@ -67,11 +67,6 @@ Route::middleware('auth:user')->group(function () {
 Route::post('/testimonial', [TestimonialController::class, 'store'])->middleware('auth:user')->name('testimonial.store');
 Route::get('/testimonials/approved', [TestimonialController::class, 'getApproved'])->name('testimonials.approved');
 
-// Auth Routes
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 // User Auth (Public user) Routes
 Route::prefix('user')->name('user.')->group(function () {
     // Register & OTP
@@ -94,8 +89,15 @@ Route::prefix('user')->name('user.')->group(function () {
     });
 });
 
+// Admin Auth Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
 // Admin Routes (Protected)
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     
     // Posts Management
@@ -120,4 +122,26 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
     Route::put('/testimonials/{id}/status', [TestimonialController::class, 'updateStatus'])->name('testimonials.updateStatus');
     Route::delete('/testimonials/{id}', [TestimonialController::class, 'destroy'])->name('testimonials.destroy');
+});
+
+// Petugas Routes (Staff Panel)
+Route::prefix('petugas')->name('petugas.')->group(function () {
+    // Auth routes
+    Route::get('/login', [App\Http\Controllers\PetugasAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\PetugasAuthController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\PetugasAuthController::class, 'logout'])->name('logout');
+    
+    // Protected routes
+    Route::middleware(['auth:petugas'])->group(function () {
+        Route::get('/', [App\Http\Controllers\PetugasDashboardController::class, 'dashboard'])->name('dashboard');
+        
+        // Posts Management
+        Route::resource('posts', App\Http\Controllers\Petugas\PostController::class);
+        
+        // Galeri Management
+        Route::resource('galery', App\Http\Controllers\Petugas\GaleryController::class);
+        
+        // Foto Management
+        Route::resource('foto', App\Http\Controllers\Petugas\FotoController::class);
+    });
 });

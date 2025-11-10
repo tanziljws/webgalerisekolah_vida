@@ -5,20 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Admin;
+use App\Models\Petugas;
 
-class AuthController extends Controller
+class PetugasAuthController extends Controller
 {
     /**
      * Show the login form
      */
     public function showLoginForm()
     {
-        if (Auth::guard('admin')->check()) {
-            return redirect()->route('admin.dashboard');
+        if (Auth::guard('petugas')->check()) {
+            return redirect()->route('petugas.dashboard');
         }
         
-        return view('auth.login');
+        return view('petugas.auth.login');
     }
 
     /**
@@ -55,26 +55,33 @@ class AuthController extends Controller
 
         $credentials = $request->only('username', 'password');
 
-        // Check if admin exists
-        $admin = Admin::where('username', $credentials['username'])->first();
+        // Check if user exists and is a petugas (not admin)
+        $petugas = Petugas::where('username', $credentials['username'])->first();
         
-        if (!$admin) {
+        if (!$petugas) {
             return back()->withErrors([
                 'username' => 'Username tidak ditemukan.'
             ])->withInput($request->only('username'));
         }
 
+        // Check if role is petugas (not admin)
+        if ($petugas->role !== 'petugas') {
+            return back()->withErrors([
+                'username' => 'Akses ditolak. Silakan login melalui panel admin.'
+            ])->withInput($request->only('username'));
+        }
+
         // Check password
-        if (!password_verify($credentials['password'], $admin->password)) {
+        if (!password_verify($credentials['password'], $petugas->password)) {
             return back()->withErrors([
                 'password' => 'Password salah.'
             ])->withInput($request->only('username'));
         }
 
         // Login successful
-        Auth::guard('admin')->login($admin);
+        Auth::guard('petugas')->login($petugas);
         
-        return redirect()->intended(route('admin.dashboard'));
+        return redirect()->intended(route('petugas.dashboard'));
     }
 
     /**
@@ -82,11 +89,11 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        Auth::guard('petugas')->logout();
         
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect()->route('login');
+        return redirect()->route('guest.home');
     }
 }

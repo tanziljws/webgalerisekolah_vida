@@ -22,7 +22,7 @@
                     <div class="row">
                         <div class="col-md-8">
                             <h3>{{ $petugas->username }}</h3>
-                            <p class="text-muted">Dibuat pada {{ $petugas->created_at->format('d M Y H:i') }}</p>
+                            <p class="text-muted">Dibuat pada {{ $petugas->created_at ? $petugas->created_at->format('d M Y H:i') : '-' }}</p>
                             
                             @if($petugas->posts->count() > 0)
                                 <h5 class="mt-4">Posts yang dibuat:</h5>
@@ -31,7 +31,7 @@
                                     <div class="list-group-item">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h6 class="mb-1">{{ $post->judul }}</h6>
-                                            <small>{{ $post->created_at->format('d M Y') }}</small>
+                                            <small>{{ $post->created_at ? $post->created_at->format('d M Y') : '-' }}</small>
                                         </div>
                                         <p class="mb-1">{{ \Illuminate\Support\Str::limit($post->isi, 100) }}</p>
                                         <small>
@@ -59,8 +59,8 @@
                                 <div class="card-body">
                                     <p><strong>Username:</strong> {{ $petugas->username }}</p>
                                     <p><strong>Total Posts:</strong> {{ $petugas->posts->count() }}</p>
-                                    <p><strong>Dibuat:</strong> {{ $petugas->created_at->format('d M Y H:i') }}</p>
-                                    <p><strong>Diupdate:</strong> {{ $petugas->updated_at->format('d M Y H:i') }}</p>
+                                    <p><strong>Dibuat:</strong> {{ $petugas->created_at ? $petugas->created_at->format('d M Y H:i') : '-' }}</p>
+                                    <p><strong>Diupdate:</strong> {{ $petugas->updated_at ? $petugas->updated_at->format('d M Y H:i') : '-' }}</p>
                                 </div>
                             </div>
                         </div>

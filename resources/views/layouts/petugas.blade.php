@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Dashboard - SMKN 4 BOGOR')</title>
+    <title>@yield('title', 'Dashboard Petugas - SMKN 4 BOGOR')</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -29,6 +29,7 @@
             color: white;
             z-index: 1000;
             transition: all 0.3s ease;
+            overflow-y: auto;
         }
         
         .sidebar-header {
@@ -90,6 +91,7 @@
             border: none;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
         }
         
         .btn-primary {
@@ -100,6 +102,11 @@
         .btn-primary:hover {
             background-color: #1e40af;
             border-color: #1e40af;
+        }
+
+        .badge {
+            padding: 0.35rem 0.65rem;
+            font-weight: 500;
         }
         
         @media (max-width: 768px) {
@@ -114,6 +121,28 @@
             .main-content {
                 margin-left: 0;
             }
+
+            .content-wrapper {
+                padding: 1rem;
+            }
+
+            .top-navbar {
+                padding: 0.75rem 1rem;
+            }
+
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .content-wrapper {
+                padding: 0.75rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
@@ -123,74 +152,46 @@
         <div class="sidebar-header">
             <img src="/images/logo-smkn4.png.png" alt="SMKN 4 BOGOR">
             <h6 class="mb-0">SMKN 4 BOGOR</h6>
-            <small>Admin Panel</small>
+            <small>Panel Petugas</small>
         </div>
         
         <nav class="sidebar-nav">
             <div class="nav-item">
-                <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('petugas.dashboard') }}" class="nav-link {{ request()->routeIs('petugas.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
             </div>
             
             <div class="nav-item">
-                <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts*') ? 'active' : '' }}">
+                <a href="{{ route('petugas.posts.index') }}" class="nav-link {{ request()->routeIs('petugas.posts*') ? 'active' : '' }}">
                     <i class="fas fa-newspaper"></i>
                     <span>POST</span>
                 </a>
             </div>
             
             <div class="nav-item">
-                <a href="{{ route('admin.kategori.index') }}" class="nav-link {{ request()->routeIs('admin.kategori*') ? 'active' : '' }}">
-                    <i class="fas fa-tags"></i>
-                    <span>KATEGORI</span>
-                </a>
-            </div>
-            
-            <div class="nav-item">
-                <a href="{{ route('admin.galery.index') }}" class="nav-link {{ request()->routeIs('admin.galery*') ? 'active' : '' }}">
+                <a href="{{ route('petugas.galery.index') }}" class="nav-link {{ request()->routeIs('petugas.galery*') ? 'active' : '' }}">
                     <i class="fas fa-images"></i>
                     <span>GALERI</span>
                 </a>
             </div>
             
             <div class="nav-item">
-                <a href="{{ route('admin.foto.index') }}" class="nav-link {{ request()->routeIs('admin.foto*') ? 'active' : '' }}">
+                <a href="{{ route('petugas.foto.index') }}" class="nav-link {{ request()->routeIs('petugas.foto*') ? 'active' : '' }}">
                     <i class="fas fa-camera"></i>
                     <span>FOTO</span>
-                </a>
-            </div>
-            
-            <div class="nav-item">
-                <a href="{{ route('admin.petugas.index') }}" class="nav-link {{ request()->routeIs('admin.petugas*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i>
-                    <span>PETUGAS</span>
-                </a>
-            </div>
-            
-            <div class="nav-item">
-                <a href="{{ route('admin.profile.index') }}" class="nav-link {{ request()->routeIs('admin.profile*') ? 'active' : '' }}">
-                    <i class="fas fa-info-circle"></i>
-                    <span>PROFIL</span>
-                </a>
-            </div>
-            
-            <div class="nav-item">
-                <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}">
-                    <i class="fas fa-comments"></i>
-                    <span>TESTIMONI</span>
                 </a>
             </div>
             
             <hr class="mx-3">
             
             <div class="nav-item">
-                <a href="{{ route('admin.logout') }}" class="nav-link text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a href="{{ route('petugas.logout') }}" class="nav-link text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
-                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
+                <form id="logout-form" action="{{ route('petugas.logout') }}" method="POST" class="d-none">
                     @csrf
                 </form>
             </div>
@@ -202,22 +203,20 @@
         <!-- Top Navbar -->
         <div class="top-navbar">
             <div class="d-flex align-items-center">
-                <button class="btn btn-link d-md-none" id="sidebarToggle">
+                <button class="btn btn-link d-md-none me-2" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                <h4 class="mb-0 ms-2">@yield('page-title', 'Dashboard')</h4>
+                <h4 class="mb-0">@yield('page-title', 'Dashboard')</h4>
             </div>
             
             <div class="d-flex align-items-center">
-                <span class="me-3">Selamat datang, {{ Auth::guard('admin')->user()->name ?? Auth::guard('admin')->user()->username }}</span>
+                <span class="me-3 d-none d-md-inline">Selamat datang, {{ Auth::guard('petugas')->user()->username }}</span>
                 <div class="dropdown">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="fas fa-user"></i>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('admin.profile.index') }}">Profil</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item text-danger" href="{{ route('petugas.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -248,9 +247,24 @@
     
     <script>
         // Sidebar toggle for mobile
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('show');
-        });
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnToggle = sidebarToggle.contains(event.target);
+                
+                if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('show')) {
+                    sidebar.classList.remove('show');
+                }
+            });
+        }
     </script>
     
     @stack('scripts')

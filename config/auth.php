@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'petugas',
+            'provider' => 'admins',
         ],
 
         // Public site user guard
@@ -47,9 +47,21 @@ return [
             'provider' => 'users',
         ],
 
+        // Admin guard
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
+        // Petugas guard (staff only)
+        'petugas' => [
+            'driver' => 'session',
+            'provider' => 'petugas',
+        ],
+
         'api' => [
             'driver' => 'token',
-            'provider' => 'petugas',
+            'provider' => 'admins',
             'hash' => false,
         ],
     ],
@@ -75,6 +87,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
         ],
 
         'petugas' => [

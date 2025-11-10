@@ -47,7 +47,7 @@
                                     <td>
                                         <span class="badge bg-primary">{{ $p->posts_count }}</span>
                                     </td>
-                                    <td>{{ $p->created_at->format('d M Y') }}</td>
+                                    <td>{{ $p->created_at ? $p->created_at->format('d M Y') : '-' }}</td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a href="{{ route('admin.petugas.show', $p) }}" class="btn btn-sm btn-info">

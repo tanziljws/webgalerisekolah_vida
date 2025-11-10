@@ -12,7 +12,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Redirect to appropriate login based on guard
+        $middleware->redirectGuestsTo(function ($request) {
+            if ($request->is('admin') || $request->is('admin/*')) {
+                return route('admin.login');
+            }
+            if ($request->is('petugas') || $request->is('petugas/*')) {
+                return route('petugas.login');
+            }
+            return route('user.login');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

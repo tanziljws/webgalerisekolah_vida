@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin - SMKN 4 BOGOR</title>
+    <title>Login Petugas - SMKN 4 BOGOR</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -138,6 +138,24 @@
             opacity: 0.8;
             font-weight: 500;
         }
+
+        @media (max-width: 768px) {
+            .login-header {
+                padding: 2rem 1.5rem;
+            }
+            
+            .login-body {
+                padding: 2rem 1.5rem;
+            }
+            
+            .login-header img {
+                height: 60px;
+            }
+            
+            .school-name {
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -148,7 +166,7 @@
                     <div class="login-header">
                         <img src="/images/logo-smkn4.png.png" alt="SMKN 4 BOGOR">
                         <h4 class="school-name mb-2">SMK Negeri 4 Kota Bogor</h4>
-                        <p class="admin-panel-text mb-0">Admin Panel</p>
+                        <p class="admin-panel-text mb-0">Panel Petugas</p>
                     </div>
                     
                     <div class="login-body">
@@ -159,9 +177,9 @@
                             </div>
                         @endif
                         
-                        <h5 class="login-title text-center mb-4">Login Admin</h5>
+                        <h5 class="login-title text-center mb-4">Login Petugas</h5>
                         
-                        <form method="POST" action="{{ route('admin.login') }}">
+                        <form method="POST" action="{{ route('petugas.login') }}">
                             @csrf
                             
                             <div class="mb-3">
@@ -175,7 +193,7 @@
                                            placeholder="Masukkan username" required autofocus>
                                 </div>
                                 @error('username')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
                             
@@ -192,7 +210,7 @@
                                     </button>
                                 </div>
                                 @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
                             
