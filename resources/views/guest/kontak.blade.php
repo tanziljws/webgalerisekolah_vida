@@ -1,0 +1,262 @@
+@extends('layouts.app')
+
+@section('title', 'Kontak - SMKN 4 BOGOR')
+
+@section('content')
+    <!-- Hero Section: Background Image -->
+    <style>
+        .hero-banner-contact {
+            position: relative;
+            height: 60vh;
+            min-height: 400px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%), url('/images/dashboarad.JPG') center/cover no-repeat;
+            background-blend-mode: overlay;
+        }
+        .hero-banner-contact .overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.6) 50%, rgba(51, 65, 85, 0.8) 100%);
+            backdrop-filter: blur(1px);
+        }
+        .hero-banner-contact h1 {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            font-weight: 800;
+        }
+        .hero-banner-contact p {
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+    </style>
+    <section class="hero-banner-contact">
+        <div class="overlay"></div>
+        <div class="container h-100 position-relative" style="z-index:2;">
+            <div class="row align-items-center h-100">
+                <div class="col-lg-8 text-white">
+                    <h1 class="display-4 fw-bold mb-3">Hubungi Kami</h1>
+                    <p class="lead mb-0 text-white-75">Kami siap membantu dan menjawab pertanyaan Anda</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="kontak" class="py-5 section-fade-in">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="fw-bold text-primary">Hubungi Kami</h2>
+                    <div class="mx-auto" style="width: 60px; height: 3px; background: linear-gradient(90deg, #1e3a8a, #3b82f6);"></div>
+                </div>
+            </div>
+            
+            <div class="row g-4">
+                <!-- Kolom Kiri: Google Maps -->
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Denah Lokasi</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="map-container" style="height: 400px; overflow: hidden;">
+                                <iframe 
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.123456789!2d106.1234567!3d-6.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sSMK%20Negeri%204%20Kota%20Bogor!5e0!3m2!1sid!2sid!4v1234567890123!5m2!1sid!2sid" 
+                                    width="100%" 
+                                    height="100%" 
+                                    style="border:0;" 
+                                    allowfullscreen="" 
+                                    loading="lazy" 
+                                    referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kolom Kanan: Detail Kontak -->
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-phone me-2"></i>Kontak</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="contact-item mb-4">
+                                <div class="d-flex align-items-start">
+                                    <div class="contact-icon me-3">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fas fa-envelope text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h6 class="mb-1 fw-bold">Email</h6>
+                                        <p class="mb-0 text-muted">info@smkn4bogor.sch.id</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item mb-4">
+                                <div class="d-flex align-items-start">
+                                    <div class="contact-icon me-3">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fas fa-map-marker-alt text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h6 class="mb-1 fw-bold">Alamat</h6>
+                                        <p class="mb-0 text-muted">Jl. Raya Tajur No. 33, Bogor, Jawa Barat, Indonesia</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item mb-4">
+                                <div class="d-flex align-items-start">
+                                    <div class="contact-icon me-3">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fas fa-phone text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h6 class="mb-1 fw-bold">Telepon</h6>
+                                        <p class="mb-0 text-muted">(0251) 123456</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item mb-4">
+                                <div class="d-flex align-items-start">
+                                    <div class="contact-icon me-3">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fas fa-fax text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h6 class="mb-1 fw-bold">Fax</h6>
+                                        <p class="mb-0 text-muted">(0251) 123457</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Kirim Pesan -->
+            <div class="row mt-5">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card border-0 shadow">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h5 class="mb-0"><i class="fas fa-paper-plane me-2"></i>Kirim Pesan</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="testimonialForm">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="nama" class="form-label">Nama Lengkap</label>
+                                        <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama lengkap" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="pesan" class="form-label">Pesan</label>
+                                    <textarea class="form-control" id="pesan" name="pesan" rows="4" placeholder="Tuliskan pesan Anda" required></textarea>
+                                </div>
+                                <!-- reCAPTCHA -->
+                                <div class="mb-3 d-flex justify-content-center">
+                                    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                                        <i class="fas fa-paper-plane me-2"></i>Kirim Pesan
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            <!-- Alert untuk feedback -->
+                            <div id="alertContainer" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript for Testimonial Form -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testimonialForm = document.getElementById('testimonialForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const alertContainer = document.getElementById('alertContainer');
+            
+            if (testimonialForm) {
+                testimonialForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Disable submit button
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mengirim...';
+                    
+                    // Get form data
+                    const formData = new FormData(this);
+                    
+                    // Send AJAX request (FormData sudah membawa g-recaptcha-response jika dicentang)
+                    fetch('{{ route("testimonial.store") }}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            showAlert('success', data.message);
+                            testimonialForm.reset();
+                            if (typeof grecaptcha !== 'undefined') { grecaptcha.reset(); }
+                        } else {
+                            const msg = data.message || (data.errors && (data.errors['g-recaptcha-response'] || []).join(', ')) || 'Terjadi kesalahan';
+                            showAlert('danger', msg);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showAlert('danger', 'Terjadi kesalahan saat mengirim pesan: ' + error.message);
+                    })
+                    .finally(() => {
+                        // Re-enable submit button
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Kirim Pesan';
+                    });
+                });
+            }
+            
+            function showAlert(type, message) {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+                
+                // Auto hide after 5 seconds
+                setTimeout(() => {
+                    const alert = alertContainer.querySelector('.alert');
+                    if (alert) {
+                        alert.remove();
+                    }
+                }, 5000);
+            }
+        });
+    </script>
+@endsection
+
