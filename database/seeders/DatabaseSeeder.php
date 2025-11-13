@@ -86,13 +86,11 @@ class DatabaseSeeder extends Seeder
         $fotos = [
             [
                 'galery_id' => 1,
-                'file' => 'welcome.jpg',
-                'judul' => 'Gedung Sekolah'
+                'file' => 'welcome.jpg'
             ],
             [
                 'galery_id' => 2,
-                'file' => 'activity1.jpg',
-                'judul' => 'Kegiatan Belajar'
+                'file' => 'activity1.jpg'
             ]
         ];
 
