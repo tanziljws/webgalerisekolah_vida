@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use App\Models\Like;
 use App\Models\Bookmark;
 use App\Models\Comment;
@@ -29,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production
+        if (config('app.env') === 'production' || config('app.url') && str_starts_with(config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
+        
         Like::observe(LikeObserver::class);
         Bookmark::observe(BookmarkObserver::class);
         Comment::observe(CommentObserver::class);
