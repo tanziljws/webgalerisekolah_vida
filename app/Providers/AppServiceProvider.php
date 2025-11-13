@@ -30,9 +30,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Force HTTPS in production
-        if (config('app.env') === 'production' || config('app.url') && str_starts_with(config('app.url'), 'https://')) {
+        // Force HTTPS in production or when APP_URL uses HTTPS
+        if (config('app.env') === 'production' || (config('app.url') && str_starts_with(config('app.url'), 'https://'))) {
             URL::forceScheme('https');
+            // Force secure cookies
+            if (config('session.secure') !== true) {
+                config(['session.secure' => true]);
+            }
         }
         
         Like::observe(LikeObserver::class);

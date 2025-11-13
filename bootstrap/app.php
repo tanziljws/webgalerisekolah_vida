@@ -25,6 +25,9 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Trust proxies for HTTPS
         $middleware->trustProxies();
+        
+        // Force HTTPS redirect
+        $middleware->append(\App\Http\Middleware\ForceHttps::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
