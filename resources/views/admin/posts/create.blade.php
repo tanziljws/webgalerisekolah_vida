@@ -36,7 +36,7 @@
 
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="kategori_id" class="form-label">Kategori</label>
+                                    <label for="kategori_id" class="form-label">Kategori Utama <span class="text-danger">*</span></label>
                                     <select class="form-select @error('kategori_id') is-invalid @enderror" 
                                             id="kategori_id" name="kategori_id" required>
                                         <option value="">Pilih Kategori</option>
@@ -49,6 +49,27 @@
                                     </select>
                                     @error('kategori_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Kategori Tambahan (Multiple)</label>
+                                    <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                                        @foreach($kategoris as $kategori)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" 
+                                                       name="kategori_ids[]" value="{{ $kategori->id }}" 
+                                                       id="kat_{{ $kategori->id }}"
+                                                       {{ (is_array(old('kategori_ids')) && in_array($kategori->id, old('kategori_ids'))) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="kat_{{ $kategori->id }}">
+                                                    {{ $kategori->judul }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <small class="text-muted">Pilih kategori tambahan jika post termasuk dalam beberapa kategori</small>
+                                    @error('kategori_ids')
+                                        <div class="text-danger small mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
 

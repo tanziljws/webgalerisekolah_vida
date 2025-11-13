@@ -12,14 +12,15 @@
         .gallery-link { position:absolute; inset:0; z-index:10; display:block; cursor:pointer; }
 
         /* Card */
-        .gallery-card { position:relative; border-radius:16px; overflow:hidden; background:#fff; box-shadow: 0 4px 12px rgba(15,23,42,.08); aspect-ratio:4/3; transition: all .2s cubic-bezier(0.4, 0, 0.2, 1); isolation:isolate; cursor:pointer; }
+        .gallery-card { position:relative; border-radius:16px; overflow:visible; background:#fff; box-shadow: 0 4px 12px rgba(15,23,42,.08); transition: all .2s cubic-bezier(0.4, 0, 0.2, 1); isolation:isolate; cursor:pointer; }
         .gallery-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(15,23,42,.15); }
-        .gallery-card img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:inherit; pointer-events:none; }
+        .gallery-card-img-wrapper { position:relative; aspect-ratio:4/3; border-radius:16px; overflow:hidden; }
+        .gallery-card img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+        .gallery-card-title { padding:12px 8px; text-align:center; }
+        .gallery-card-title h6 { margin:0; font-size:14px; font-weight:600; color:#0f172a; line-height:1.4; }
 
         /* Overlay hover */
-        .gallery-overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:stretch; justify-content:space-between; padding:.5rem; pointer-events:none; opacity:0; transition: opacity .35s ease; z-index:15; }
-        .gallery-title-overlay { background: linear-gradient(to top, rgba(15,23,42,.9) 0%, transparent 100%); padding:1rem .5rem .5rem; display:flex; align-items:center; justify-content:center; }
-        .gallery-title-text { color:#fff; font-weight:700; font-size:14px; text-align:center; line-height:1.3; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .gallery-overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start; padding:.5rem; pointer-events:none; opacity:0; transition: opacity .35s ease; z-index:15; }
         .fade-slide { opacity:0; transform: translateY(-8px); transition: opacity .35s ease, transform .35s ease; pointer-events:none; }
         .gallery-card:hover .gallery-overlay { opacity:1; pointer-events:none; }
         .gallery-card:hover .fade-slide { opacity:1; transform: translateY(0); pointer-events:none; }
@@ -121,21 +122,23 @@
                     @php($photos = $galery->fotos)
                     @php($first = $photos->first())
                     <div class="gallery-card {{ $photos->count() > 1 ? 'has-multi' : '' }}" id="g-{{ $galery->id }}">
-                        <img src="{{ $first ? Storage::url($first->file) : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="" loading="lazy">
-                        <a class="gallery-link" href="{{ route('guest.galeri.show', $galery) }}" aria-label="Buka galeri"></a>
-                        <div class="gallery-overlay fade-slide">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <a class="icon-btn" title="Unduh" id="dl-{{ $galery->id }}" href="{{ $first ? Storage::url($first->file) : '#' }}" download onclick="event.stopPropagation();"><i class="bi bi-download"></i></a>
-                                <button type="button" class="icon-btn" title="Simpan" onclick="return bookmarkTile(event, '{{ $galery->id }}')"><i class="bi bi-bookmark"></i></button>
+                        <div class="gallery-card-img-wrapper">
+                            <img src="{{ $first ? Storage::url($first->file) : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="{{ $galery->judul }}" loading="lazy">
+                            <a class="gallery-link" href="{{ route('guest.galeri.show', $galery) }}" aria-label="Buka galeri"></a>
+                            <div class="gallery-overlay fade-slide">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <a class="icon-btn" title="Unduh" id="dl-{{ $galery->id }}" href="{{ $first ? Storage::url($first->file) : '#' }}" download onclick="event.stopPropagation();"><i class="bi bi-download"></i></a>
+                                    <button type="button" class="icon-btn" title="Simpan" onclick="return bookmarkTile(event, '{{ $galery->id }}')"><i class="bi bi-bookmark"></i></button>
+                                </div>
                             </div>
-                            <div class="gallery-title-overlay">
-                                <div class="gallery-title-text">{{ $galery->post->judul }}</div>
+                            <button type="button" class="gallery-arrow left" onclick="return cycleTile(event, '{{ $galery->id }}', -1)"><i class="bi bi-chevron-left"></i></button>
+                            <button type="button" class="gallery-arrow right" onclick="return cycleTile(event, '{{ $galery->id }}', 1)"><i class="bi bi-chevron-right"></i></button>
+                            <div class="gallery-dots" aria-hidden="false">
+                                <div class="dots-scroll" id="dots-{{ $galery->id }}"></div>
                             </div>
                         </div>
-                        <button type="button" class="gallery-arrow left" onclick="return cycleTile(event, '{{ $galery->id }}', -1)"><i class="bi bi-chevron-left"></i></button>
-                        <button type="button" class="gallery-arrow right" onclick="return cycleTile(event, '{{ $galery->id }}', 1)"><i class="bi bi-chevron-right"></i></button>
-                        <div class="gallery-dots" aria-hidden="false">
-                            <div class="dots-scroll" id="dots-{{ $galery->id }}"></div>
+                        <div class="gallery-card-title">
+                            <h6>{{ $galery->judul ?? $galery->post->judul }}</h6>
                         </div>
                     </div>
                 @endforeach

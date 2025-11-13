@@ -14,6 +14,18 @@
                     <form action="{{ route('admin.galery.update', $galery) }}" method="POST">
                         @csrf
                         @method('PUT')
+                        
+                        <div class="mb-3">
+                            <label for="judul" class="form-label">Judul Galeri <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('judul') is-invalid @enderror" 
+                                   id="judul" name="judul" value="{{ old('judul', $galery->judul) }}" 
+                                   placeholder="Masukkan judul galeri" required>
+                            @error('judul')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">Judul galeri akan ditampilkan di bawah foto pada halaman galeri</small>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">

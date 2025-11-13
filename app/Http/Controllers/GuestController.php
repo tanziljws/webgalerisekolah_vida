@@ -81,18 +81,28 @@ class GuestController extends Controller
         $filterPosts = collect();
         
         if ($galeriKategori) {
-            // Posts for content section
-            $galeriPosts = Post::with(['kategori', 'petugas'])
+            // Posts for content section - bisa dari kategori utama atau kategori tambahan
+            $galeriPosts = Post::with(['kategori', 'kategoris', 'petugas'])
                 ->where('status', 'published')
-                ->where('kategori_id', $galeriKategori->id)
+                ->where(function($q) use ($galeriKategori) {
+                    $q->where('kategori_id', $galeriKategori->id)
+                      ->orWhereHas('kategoris', function($subq) use ($galeriKategori) {
+                          $subq->where('kategori_id', $galeriKategori->id);
+                      });
+                })
                 ->latest()
                 ->take(6)
                 ->get();
                 
-            // Posts that have galleries (for filter chips)
-            $filterPosts = Post::with(['kategori'])
+            // Posts that have galleries (for filter chips) - bisa dari kategori utama atau tambahan
+            $filterPosts = Post::with(['kategori', 'kategoris'])
                 ->where('status', 'published')
-                ->where('kategori_id', $galeriKategori->id)
+                ->where(function($q) use ($galeriKategori) {
+                    $q->where('kategori_id', $galeriKategori->id)
+                      ->orWhereHas('kategoris', function($subq) use ($galeriKategori) {
+                          $subq->where('kategori_id', $galeriKategori->id);
+                      });
+                })
                 ->whereHas('galeries', function($q) {
                     $q->where('status', 1);
                 })
