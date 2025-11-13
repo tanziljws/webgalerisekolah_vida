@@ -23,11 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
             return route('user.login');
         });
         
-        // Trust proxies for HTTPS
+        // Trust proxies for HTTPS (Railway handles HTTPS at proxy level)
         $middleware->trustProxies();
-        
-        // Force HTTPS redirect
-        $middleware->append(\App\Http\Middleware\ForceHttps::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
