@@ -12,11 +12,17 @@ class OtpCodeMail extends Mailable
 
     public string $otp;
 
+    /**
+     * Create a new message instance.
+     */
     public function __construct(string $otp)
     {
         $this->otp = $otp;
     }
 
+    /**
+     * Build the message.
+     */
     public function build()
     {
         return $this->subject('Kode OTP Verifikasi Akun Anda')
