@@ -22,26 +22,30 @@ class UserAuthController extends Controller
     public function register(Request $request)
     {
         // Normalize input: trim whitespace and lowercase email
-        $email = strtolower(trim($request->email));
-        $username = trim($request->username);
+        $email = $request->email ? strtolower(trim($request->email)) : null;
+        $username = $request->username ? trim($request->username) : null;
         
-        $request->merge([
-            'email' => $email,
-            'username' => $username,
-        ]);
-
-        $request->validate([
+        // Validate with normalized values
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:50|unique:users,username',
-            'email' => 'required|email|unique:users,email',
+            'username' => 'required|string|max:50',
+            'email' => 'required|email',
             'password' => 'required|string|min:6|confirmed',
         ], [
-            'username.unique' => 'Username sudah digunakan.',
+            'username.required' => 'Username wajib diisi.',
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah terdaftar.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
+
+        // Check uniqueness with normalized values
+        if (User::where('username', $username)->exists()) {
+            return back()->withErrors(['username' => 'Username sudah digunakan.'])->withInput();
+        }
+        
+        if (User::where('email', $email)->exists()) {
+            return back()->withErrors(['email' => 'Email sudah terdaftar.'])->withInput();
+        }
 
         $user = User::create([
             'name' => trim($request->name),
@@ -180,6 +184,10 @@ class UserAuthController extends Controller
 
         // Normalize identity input
         $identity = trim($request->identity);
+        if (empty($identity)) {
+            return back()->withErrors(['identity' => 'Email, username, atau nomor HP wajib diisi.'])->withInput();
+        }
+        
         $identityLower = strtolower($identity);
         
         // Check if identity looks like an email
@@ -191,7 +199,7 @@ class UserAuthController extends Controller
         } else {
             // Try username first, then phone
             $user = User::where('username', $identity)->first();
-            if (!$user) {
+            if (!$user && !empty($identity)) {
                 $user = User::where('phone', $identity)->first();
             }
         }
