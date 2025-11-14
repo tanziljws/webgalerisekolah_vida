@@ -21,6 +21,15 @@ class UserAuthController extends Controller
 
     public function register(Request $request)
     {
+        // Normalize input: trim whitespace and lowercase email
+        $email = strtolower(trim($request->email));
+        $username = trim($request->username);
+        
+        $request->merge([
+            'email' => $email,
+            'username' => $username,
+        ]);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:50|unique:users,username',
@@ -35,10 +44,10 @@ class UserAuthController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'phone' => $request->phone,
+            'name' => trim($request->name),
+            'username' => $username,
+            'email' => $email,
+            'phone' => $request->phone ? trim($request->phone) : null,
             'password' => $request->password, // hashed by model cast
             'is_verified' => false,
         ]);
@@ -169,11 +178,23 @@ class UserAuthController extends Controller
                 ->withInput();
         }
 
-        $identity = $request->identity;
-        $user = User::where('username', $identity)
-            ->orWhere('email', $identity)
-            ->orWhere('phone', $identity)
-            ->first();
+        // Normalize identity input
+        $identity = trim($request->identity);
+        $identityLower = strtolower($identity);
+        
+        // Check if identity looks like an email
+        $isEmail = filter_var($identityLower, FILTER_VALIDATE_EMAIL);
+        
+        // Query user based on identity type
+        if ($isEmail) {
+            $user = User::where('email', $identityLower)->first();
+        } else {
+            // Try username first, then phone
+            $user = User::where('username', $identity)->first();
+            if (!$user) {
+                $user = User::where('phone', $identity)->first();
+            }
+        }
 
         if (!$user) {
             return back()->withErrors(['identity' => 'Akun tidak ditemukan.'])->withInput();
@@ -207,6 +228,10 @@ class UserAuthController extends Controller
 
     public function sendResetOtp(Request $request)
     {
+        // Normalize email input
+        $email = strtolower(trim($request->email));
+        $request->merge(['email' => $email]);
+        
         $request->validate([
             'email' => 'required|email|exists:users,email',
         ], [
@@ -215,7 +240,7 @@ class UserAuthController extends Controller
             'email.exists' => 'Email tidak terdaftar.',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $email)->first();
         
         // Generate OTP
         $otp = str_pad((string)random_int(0, 999999), 6, '0', STR_PAD_LEFT);

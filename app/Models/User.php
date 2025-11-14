@@ -53,4 +53,26 @@ class User extends Authenticatable
             'is_verified' => 'boolean',
         ];
     }
+
+    /**
+     * Set the user's email (always lowercase).
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = strtolower(trim($value));
+    }
+
+    /**
+     * Set the user's username (trim whitespace).
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setUsernameAttribute($value)
+    {
+        $this->attributes['username'] = trim($value);
+    }
 }
