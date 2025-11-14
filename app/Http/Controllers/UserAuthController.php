@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Mail\OtpCodeMail;
 use Carbon\Carbon;
@@ -27,7 +28,7 @@ class UserAuthController extends Controller
     public function register(Request $request)
     {
         // Validate first
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:50',
             'email' => 'required|email',
@@ -52,14 +53,19 @@ class UserAuthController extends Controller
             return back()->withErrors(['email' => 'Email sudah terdaftar.'])->withInput();
         }
 
-        $user = User::create([
-            'name' => trim($request->name),
-            'username' => $username,
-            'email' => $email,
-            'phone' => $request->phone ? trim($request->phone) : null,
-            'password' => $request->password, // hashed by model cast
-            'is_verified' => false,
-        ]);
+        try {
+            $user = User::create([
+                'name' => trim($request->name),
+                'username' => $username,
+                'email' => $email,
+                'phone' => $request->phone ? trim($request->phone) : null,
+                'password' => $request->password, // hashed by model cast
+                'is_verified' => false,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('User registration error: ' . $e->getMessage());
+            return back()->withErrors(['email' => 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.'])->withInput();
+        }
 
         // Generate OTP
         $otp = str_pad((string)random_int(0, 999999), 6, '0', STR_PAD_LEFT);
