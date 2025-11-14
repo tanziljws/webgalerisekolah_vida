@@ -16,16 +16,17 @@ class UserAuthController extends Controller
 {
     public function showRegisterForm()
     {
+        // Check if user is already logged in
+        if (Auth::guard('user')->check()) {
+            return redirect()->route('guest.home');
+        }
+        
         return view('user.register');
     }
 
     public function register(Request $request)
     {
-        // Normalize input: trim whitespace and lowercase email
-        $email = $request->email ? strtolower(trim($request->email)) : null;
-        $username = $request->username ? trim($request->username) : null;
-        
-        // Validate with normalized values
+        // Validate first
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:50',
@@ -38,6 +39,10 @@ class UserAuthController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
+        // Normalize input: trim whitespace and lowercase email
+        $email = strtolower(trim($request->email));
+        $username = trim($request->username);
+        
         // Check uniqueness with normalized values
         if (User::where('username', $username)->exists()) {
             return back()->withErrors(['username' => 'Username sudah digunakan.'])->withInput();
