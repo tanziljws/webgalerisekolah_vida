@@ -171,13 +171,26 @@ class UserAuthController extends Controller
                     return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.']);
                 }
             } catch (\Exception $e) {
+                $errorMessage = $e->getMessage();
                 Log::error('Exception when resending OTP email', [
                     'user_id' => $user->id,
                     'email' => $user->email,
-                    'error' => $e->getMessage(),
+                    'error' => $errorMessage,
                     'trace' => $e->getTraceAsString()
                 ]);
-                return back()->withErrors(['otp' => 'Gagal mengirim email: ' . $e->getMessage()]);
+                
+                // Extract user-friendly error message
+                if (str_contains($errorMessage, 'validation_error') || str_contains($errorMessage, 'invalid')) {
+                    $userMessage = 'Email tidak valid atau tidak dapat menerima email. Silakan gunakan email lain atau hubungi admin.';
+                } elseif (str_contains($errorMessage, 'rate_limit') || str_contains($errorMessage, 'too_many')) {
+                    $userMessage = 'Terlalu banyak permintaan. Silakan coba lagi beberapa saat kemudian.';
+                } elseif (str_contains($errorMessage, 'unauthorized') || str_contains($errorMessage, '401')) {
+                    $userMessage = 'Konfigurasi email tidak valid. Silakan hubungi admin.';
+                } else {
+                    $userMessage = 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.';
+                }
+                
+                return back()->withErrors(['otp' => $userMessage]);
             }
         }
 
@@ -310,13 +323,26 @@ class UserAuthController extends Controller
                 return back()->withErrors(['email' => 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.'])->withInput();
             }
         } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
             Log::error('Exception when sending reset password OTP email', [
                 'user_id' => $user->id,
                 'email' => $user->email,
-                'error' => $e->getMessage(),
+                'error' => $errorMessage,
                 'trace' => $e->getTraceAsString()
             ]);
-            return back()->withErrors(['email' => 'Gagal mengirim email: ' . $e->getMessage()])->withInput();
+            
+            // Extract user-friendly error message
+            if (str_contains($errorMessage, 'validation_error') || str_contains($errorMessage, 'invalid')) {
+                $userMessage = 'Email tidak valid atau tidak dapat menerima email. Silakan gunakan email lain atau hubungi admin.';
+            } elseif (str_contains($errorMessage, 'rate_limit') || str_contains($errorMessage, 'too_many')) {
+                $userMessage = 'Terlalu banyak permintaan. Silakan coba lagi beberapa saat kemudian.';
+            } elseif (str_contains($errorMessage, 'unauthorized') || str_contains($errorMessage, '401')) {
+                $userMessage = 'Konfigurasi email tidak valid. Silakan hubungi admin.';
+            } else {
+                $userMessage = 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.';
+            }
+            
+            return back()->withErrors(['email' => $userMessage])->withInput();
         }
 
         return redirect()->route('user.reset-password-otp')->with('status', 'Kode OTP telah dikirim ke email Anda.');
@@ -417,13 +443,26 @@ class UserAuthController extends Controller
                 return back()->withErrors(['otp' => 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.']);
             }
         } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
             Log::error('Exception when resending reset password OTP email', [
                 'user_id' => $user->id,
                 'email' => $user->email,
-                'error' => $e->getMessage(),
+                'error' => $errorMessage,
                 'trace' => $e->getTraceAsString()
             ]);
-            return back()->withErrors(['otp' => 'Gagal mengirim email: ' . $e->getMessage()]);
+            
+            // Extract user-friendly error message
+            if (str_contains($errorMessage, 'validation_error') || str_contains($errorMessage, 'invalid')) {
+                $userMessage = 'Email tidak valid atau tidak dapat menerima email. Silakan gunakan email lain atau hubungi admin.';
+            } elseif (str_contains($errorMessage, 'rate_limit') || str_contains($errorMessage, 'too_many')) {
+                $userMessage = 'Terlalu banyak permintaan. Silakan coba lagi beberapa saat kemudian.';
+            } elseif (str_contains($errorMessage, 'unauthorized') || str_contains($errorMessage, '401')) {
+                $userMessage = 'Konfigurasi email tidak valid. Silakan hubungi admin.';
+            } else {
+                $userMessage = 'Gagal mengirim email. Silakan coba lagi atau hubungi admin.';
+            }
+            
+            return back()->withErrors(['otp' => $userMessage]);
         }
 
         return back()->with('status', 'OTP baru telah dikirim.');

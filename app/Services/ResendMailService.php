@@ -62,13 +62,22 @@ class ResendMailService
                 ]);
                 return true;
             } else {
+                $errorBody = $response->json();
+                $errorMessage = $errorBody['message'] ?? $response->body();
+                $errorType = $errorBody['type'] ?? 'unknown';
+                
                 Log::error('Resend API returned error', [
                     'to' => $to,
                     'status' => $response->status(),
-                    'body' => $response->body(),
-                    'from' => $from
+                    'error_type' => $errorType,
+                    'error_message' => $errorMessage,
+                    'full_response' => $errorBody,
+                    'from' => $from,
+                    'api_key_prefix' => substr($this->apiKey, 0, 10) . '...'
                 ]);
-                return false;
+                
+                // Throw exception with detailed error for better debugging
+                throw new \Exception("Resend API Error ({$errorType}): {$errorMessage}");
             }
         } catch (\Exception $e) {
             Log::error('Failed to send OTP email via Resend API', [
