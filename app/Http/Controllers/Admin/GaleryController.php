@@ -29,6 +29,7 @@ class GaleryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'judul' => 'required|string|max:255',
             'post_id' => 'required|exists:posts,id',
             'position' => 'required|integer|min:1',
             'status' => 'required|in:0,1',
@@ -37,6 +38,7 @@ class GaleryController extends Controller
         ]);
 
         $galery = Galery::create([
+            'judul' => $validated['judul'],
             'post_id' => $validated['post_id'],
             'position' => $validated['position'],
             'status' => $validated['status'],
@@ -85,13 +87,14 @@ class GaleryController extends Controller
 
     public function update(Request $request, Galery $galery)
     {
-        $request->validate([
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
             'post_id' => 'required|exists:posts,id',
             'position' => 'required|integer|min:1',
             'status' => 'required|in:0,1'
         ]);
 
-        $galery->update($request->all());
+        $galery->update($validated);
 
         return redirect()->route('admin.galery.index')
             ->with('success', 'Galeri berhasil diupdate!');

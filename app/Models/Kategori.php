@@ -16,4 +16,9 @@ class Kategori extends Model
     {
         return $this->hasMany(Post::class);
     }
+
+    public function postsManyToMany()
+    {
+        return $this->belongsToMany(Post::class, 'kategori_post');
+    }
 }

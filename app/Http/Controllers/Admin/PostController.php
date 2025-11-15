@@ -13,7 +13,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with(['kategori', 'petugas'])->latest()->paginate(10);
+        $posts = Post::with(['kategori', 'kategoris', 'petugas'])->latest()->paginate(10);
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -29,12 +29,19 @@ class PostController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'kategori_id' => 'required|exists:kategori,id',
+            'kategori_ids' => 'nullable|array',
+            'kategori_ids.*' => 'exists:kategori,id',
             'isi' => 'required|string',
             'petugas_id' => 'required|exists:petugas,id',
             'status' => 'required|in:draft,published'
         ]);
 
-        Post::create($request->all());
+        $post = Post::create($request->only(['judul', 'kategori_id', 'isi', 'petugas_id', 'status']));
+
+        // Sync multiple kategori jika ada
+        if ($request->has('kategori_ids') && is_array($request->kategori_ids)) {
+            $post->kategoris()->sync($request->kategori_ids);
+        }
 
         return redirect()->route('admin.posts.index')
             ->with('success', 'Post berhasil dibuat!');
@@ -48,6 +55,7 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+        $post->load('kategoris');
         $kategoris = Kategori::all();
         $petugas = Petugas::all();
         return view('admin.posts.edit', compact('post', 'kategoris', 'petugas'));
@@ -58,12 +66,19 @@ class PostController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'kategori_id' => 'required|exists:kategori,id',
+            'kategori_ids' => 'nullable|array',
+            'kategori_ids.*' => 'exists:kategori,id',
             'isi' => 'required|string',
             'petugas_id' => 'required|exists:petugas,id',
             'status' => 'required|in:draft,published'
         ]);
 
-        $post->update($request->all());
+        $post->update($request->only(['judul', 'kategori_id', 'isi', 'petugas_id', 'status']));
+
+        // Sync multiple kategori jika ada
+        if ($request->has('kategori_ids')) {
+            $post->kategoris()->sync($request->kategori_ids ?? []);
+        }
 
         return redirect()->route('admin.posts.index')
             ->with('success', 'Post berhasil diupdate!');

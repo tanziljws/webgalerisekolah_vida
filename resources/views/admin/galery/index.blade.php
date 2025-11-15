@@ -60,6 +60,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Judul</th>
                                     <th>Post</th>
                                     <th>Position</th>
                                     <th>Foto</th>
@@ -76,6 +77,9 @@
                                 @forelse($galeries as $index => $galery)
                                 <tr>
                                     <td>{{ $galeries->firstItem() + $index }}</td>
+                                    <td>
+                                        <div class="fw-bold">{{ $galery->judul ?? '-' }}</div>
+                                    </td>
                                     <td>
                                         <div class="fw-bold">{{ $galery->post->judul }}</div>
                                         <small class="text-muted">{{ Str::limit($galery->post->isi, 50) }}</small>
@@ -131,7 +135,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="11" class="text-center py-4">
+                                    <td colspan="12" class="text-center py-4">
                                         <i class="bi bi-inbox" style="font-size:3rem;color:#ddd;"></i>
                                         <p class="text-muted mt-2 mb-0">Belum ada galeri</p>
                                     </td>

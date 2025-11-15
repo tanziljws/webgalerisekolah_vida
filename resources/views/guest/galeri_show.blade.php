@@ -44,7 +44,7 @@
             <div class="carousel-inner">
               @forelse($galery->fotos as $idx => $foto)
                 <div class="carousel-item {{ $idx === 0 ? 'active' : '' }}">
-                  <img src="{{ Storage::url($foto->file) }}" class="d-block w-100" alt="{{ $galery->post->judul }}" data-title="{{ $galery->post->judul }}">
+                  <img src="{{ Storage::url($foto->file) }}" class="d-block w-100" alt="{{ $galery->judul ?? $galery->post->judul }}" data-title="{{ $galery->judul ?? $galery->post->judul }}">
                 </div>
               @empty
                 <div class="p-5 text-center text-muted">Tidak ada foto</div>
@@ -69,7 +69,7 @@
             @endif
           </div>
           <div class="photo-caption" id="photoCaption">
-            <strong>{{ $galery->post->judul }}</strong>
+            <strong>{{ $galery->judul ?? $galery->post->judul }}</strong>
           </div>
           <div class="p-3 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
             <div class="d-flex align-items-center gap-2 flex-wrap">

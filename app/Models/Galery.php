@@ -14,7 +14,7 @@ class Galery extends Model
     use HasFactory;
 
     protected $table = 'galery';
-    protected $fillable = ['post_id', 'position', 'status', 'total_likes', 'total_comments', 'total_bookmarks', 'total_downloads'];
+    protected $fillable = ['judul', 'post_id', 'position', 'status', 'total_likes', 'total_comments', 'total_bookmarks', 'total_downloads'];
     
     protected $casts = [
         'total_likes' => 'integer',

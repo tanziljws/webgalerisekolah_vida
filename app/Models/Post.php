@@ -17,6 +17,11 @@ class Post extends Model
         return $this->belongsTo(Kategori::class);
     }
 
+    public function kategoris()
+    {
+        return $this->belongsToMany(Kategori::class, 'kategori_post');
+    }
+
     public function petugas()
     {
         return $this->belongsTo(Petugas::class);
