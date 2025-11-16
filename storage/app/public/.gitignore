@@ -1,2 +1,6 @@
 *
 !.gitignore
+# Allow fotos folder and its contents to be tracked
+!fotos/
+!fotos/.*
+!fotos/*

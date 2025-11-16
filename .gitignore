@@ -18,6 +18,9 @@
 /public/storage
 /storage/*.key
 /storage/pail
+# Allow fotos folder to be tracked
+!/storage/app/public/fotos
+!/storage/app/public/fotos/**
 /vendor
 Homestead.json
 Homestead.yaml
