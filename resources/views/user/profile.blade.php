@@ -91,10 +91,10 @@
                         @php($photos = $galery->fotos ?? collect())
                         @php($first = $photos->first())
                         <div class="gallery-card group {{ ($photos->count() > 1) ? 'has-multi' : '' }}" id="lg-{{ $galery->id }}" data-aos="fade-up" data-aos-duration="500">
-                            <img src="{{ $first ? Storage::url($first->file) : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="" loading="lazy">
+                            <img src="{{ $first ? $first->url : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="" loading="lazy">
                             <a class="gallery-link" href="{{ route('guest.galeri.show', $galery) }}" aria-label="Buka galeri" style="position:absolute;inset:0;z-index:1;display:block;"></a>
                             <div class="gallery-overlay fade-slide">
-                                <a class="icon-btn" id="dl-lg-{{ $galery->id }}" href="{{ $first ? Storage::url($first->file) : '#' }}" download><i class="bi bi-download"></i></a>
+                                <a class="icon-btn" id="dl-lg-{{ $galery->id }}" href="{{ $first ? $first->url : '#' }}" download><i class="bi bi-download"></i></a>
                                 <span class="icon-btn"><i class="bi bi-heart-fill"></i></span>
                             </div>
                             <button type="button" class="gallery-arrow left" data-cycle="-1" data-id="lg-{{ $galery->id }}"><i class="bi bi-chevron-left"></i></button>
@@ -119,10 +119,10 @@
                         @php($photos = $galery->fotos ?? collect())
                         @php($first = $photos->first())
                         <div class="gallery-card group {{ ($photos->count() > 1) ? 'has-multi' : '' }}" id="sv-{{ $galery->id }}" data-aos="fade-up" data-aos-duration="500">
-                            <img src="{{ $first ? Storage::url($first->file) : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="" loading="lazy">
+                            <img src="{{ $first ? $first->url : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="" loading="lazy">
                             <a class="gallery-link" href="{{ route('guest.galeri.show', $galery) }}" aria-label="Buka galeri" style="position:absolute;inset:0;z-index:1;display:block;"></a>
                             <div class="gallery-overlay fade-slide">
-                                <a class="icon-btn" id="dl-sv-{{ $galery->id }}" href="{{ $first ? Storage::url($first->file) : '#' }}" download><i class="bi bi-download"></i></a>
+                                <a class="icon-btn" id="dl-sv-{{ $galery->id }}" href="{{ $first ? $first->url : '#' }}" download><i class="bi bi-download"></i></a>
                                 <span class="icon-btn"><i class="bi bi-bookmark-fill"></i></span>
                             </div>
                             <button type="button" class="gallery-arrow left" data-cycle="-1" data-id="sv-{{ $galery->id }}"><i class="bi bi-chevron-left"></i></button>
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function(){
     @foreach($likedGaleries as $galery)
       photos['lg-{{ $galery->id }}'] = [
         @foreach(($galery->fotos ?? collect()) as $f)
-          @json(Storage::url($f->file)){{ !$loop->last ? ',' : '' }}
+          @json($f->url){{ !$loop->last ? ',' : '' }}
         @endforeach
       ];
     @endforeach
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function(){
     @foreach($savedGaleries as $galery)
       photos['sv-{{ $galery->id }}'] = [
         @foreach(($galery->fotos ?? collect()) as $f)
-          @json(Storage::url($f->file)){{ !$loop->last ? ',' : '' }}
+          @json($f->url){{ !$loop->last ? ',' : '' }}
         @endforeach
       ];
     @endforeach

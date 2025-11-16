@@ -25,7 +25,7 @@
                             <p class="text-muted">Dibuat pada {{ $foto->created_at->format('d M Y H:i') }}</p>
                             
                             <div class="text-center mb-4">
-                                <img src="{{ Storage::url($foto->file) }}" alt="{{ $foto->galery->post->judul }}" class="img-fluid rounded shadow" style="max-height: 500px;">
+                                <img src="{{ $foto->url }}" alt="{{ $foto->galery->post->judul }}" class="img-fluid rounded shadow" style="max-height: 500px;">
                             </div>
                         </div>
                         <div class="col-md-4">

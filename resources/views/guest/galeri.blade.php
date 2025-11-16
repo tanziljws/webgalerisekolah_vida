@@ -123,19 +123,22 @@
                     @php($first = $photos->first())
                     <div class="gallery-card {{ $photos->count() > 1 ? 'has-multi' : '' }}" id="g-{{ $galery->id }}">
                         <div class="gallery-card-img-wrapper">
-                            <img src="{{ $first ? Storage::url($first->file) : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="{{ $galery->judul }}" loading="lazy">
+                            <img src="{{ $first ? $first->url : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="{{ $galery->judul ?? $galery->post->judul }}" loading="lazy">
                             <a class="gallery-link" href="{{ route('guest.galeri.show', $galery) }}" aria-label="Buka galeri"></a>
                             <div class="gallery-overlay fade-slide">
                                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                    <a class="icon-btn" title="Unduh" id="dl-{{ $galery->id }}" href="{{ $first ? Storage::url($first->file) : '#' }}" download onclick="event.stopPropagation();"><i class="bi bi-download"></i></a>
+                                    <a class="icon-btn" title="Unduh" id="dl-{{ $galery->id }}" href="{{ $first ? $first->url : '#' }}" download onclick="event.stopPropagation();"><i class="bi bi-download"></i></a>
                                     <button type="button" class="icon-btn" title="Simpan" onclick="return bookmarkTile(event, '{{ $galery->id }}')"><i class="bi bi-bookmark"></i></button>
                                 </div>
                             </div>
-                            <button type="button" class="gallery-arrow left" onclick="return cycleTile(event, '{{ $galery->id }}', -1)"><i class="bi bi-chevron-left"></i></button>
-                            <button type="button" class="gallery-arrow right" onclick="return cycleTile(event, '{{ $galery->id }}', 1)"><i class="bi bi-chevron-right"></i></button>
-                            <div class="gallery-dots" aria-hidden="false">
-                                <div class="dots-scroll" id="dots-{{ $galery->id }}"></div>
+                            <div class="gallery-title-overlay">
+                                <div class="gallery-title-text">{{ $galery->post->judul }}</div>
                             </div>
+                        </div>
+                        <button type="button" class="gallery-arrow left" onclick="return cycleTile(event, '{{ $galery->id }}', -1)"><i class="bi bi-chevron-left"></i></button>
+                        <button type="button" class="gallery-arrow right" onclick="return cycleTile(event, '{{ $galery->id }}', 1)"><i class="bi bi-chevron-right"></i></button>
+                        <div class="gallery-dots" aria-hidden="false">
+                            <div class="dots-scroll" id="dots-{{ $galery->id }}"></div>
                         </div>
                         <div class="gallery-card-title">
                             <h6>{{ $galery->judul ?? $galery->post->judul }}</h6>
@@ -185,7 +188,7 @@
   @foreach($galeries as $galery)
     photos[{{ $galery->id }}] = [
       @foreach($galery->fotos as $f)
-        @json(Storage::url($f->file)){{ !$loop->last ? ',' : '' }}
+        @json($f->url){{ !$loop->last ? ',' : '' }}
       @endforeach
     ];
   @endforeach

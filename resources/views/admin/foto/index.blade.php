@@ -40,7 +40,7 @@
                         @forelse($fotos as $foto)
                         <div class="col-md-3 mb-4">
                             <div class="card foto-card">
-                                <img src="{{ Storage::url($foto->file) }}" class="card-img-top" alt="Foto" style="height: 200px; object-fit: cover;">
+                                <img src="{{ $foto->url }}" class="card-img-top" alt="Foto" style="height: 200px; object-fit: cover;">
                                 <div class="card-body">
                                     <p class="card-text mb-2">
                                         <small class="text-muted">

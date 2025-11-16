@@ -61,7 +61,7 @@
                         <div class="carousel-inner" style="border-radius: 12px; overflow: hidden;">
                             @foreach($post->galeries->first()->fotos as $idx => $foto)
                             <div class="carousel-item {{ $idx === 0 ? 'active' : '' }}">
-                                <img src="{{ Storage::url($foto->file) }}" class="d-block w-100" alt="{{ $post->judul }}" style="max-height: 400px; object-fit: cover;">
+                                <img src="{{ $foto->url }}" class="d-block w-100" alt="{{ $post->judul }}" style="max-height: 400px; object-fit: cover;">
                             </div>
                             @endforeach
                         </div>

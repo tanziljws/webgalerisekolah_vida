@@ -44,7 +44,7 @@
             <div class="carousel-inner">
               @forelse($galery->fotos as $idx => $foto)
                 <div class="carousel-item {{ $idx === 0 ? 'active' : '' }}">
-                  <img src="{{ Storage::url($foto->file) }}" class="d-block w-100" alt="{{ $galery->judul ?? $galery->post->judul }}" data-title="{{ $galery->judul ?? $galery->post->judul }}">
+                  <img src="{{ $foto->url }}" class="d-block w-100" alt="{{ $galery->judul ?? $galery->post->judul }}" data-title="{{ $galery->judul ?? $galery->post->judul }}">
                 </div>
               @empty
                 <div class="p-5 text-center text-muted">Tidak ada foto</div>
@@ -167,7 +167,7 @@
           @foreach($recommendations as $g)
             <div class="col-6 col-md-4 col-lg-6">
               <a href="{{ route('guest.galeri.show', $g) }}" class="recommendation-card d-block">
-                <img src="{{ $g->fotos->first() ? Storage::url($g->fotos->first()->file) : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="">
+                <img src="{{ $g->fotos->first() ? $g->fotos->first()->url : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="">
               </a>
             </div>
           @endforeach

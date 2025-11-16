@@ -36,7 +36,7 @@
         <div class="col-md-6 col-lg-4">
             <div class="card info-card shadow-sm">
                 @if($post->galeries->isNotEmpty() && $post->galeries->first()->fotos->isNotEmpty())
-                <img src="{{ Storage::url($post->galeries->first()->fotos->first()->file) }}" class="card-img-top" alt="{{ $post->judul }}" style="height: 200px; object-fit: cover;">
+                <img src="{{ $post->galeries->first()->fotos->first()->url }}" class="card-img-top" alt="{{ $post->judul }}" style="height: 200px; object-fit: cover;">
                 @endif
                 <div class="card-body p-4">
                     <span class="badge bg-primary mb-3">{{ $post->kategori->judul }}</span>

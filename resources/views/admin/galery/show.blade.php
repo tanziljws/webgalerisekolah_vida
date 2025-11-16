@@ -36,7 +36,7 @@
                                     @foreach($galery->fotos as $foto)
                                     <div class="col-md-4 mb-3">
                                         <div class="card">
-                                            <img src="{{ Storage::url($foto->file) }}" class="card-img-top" alt="{{ $foto->judul }}" style="height: 200px; object-fit: cover;">
+                                            <img src="{{ $foto->url }}" class="card-img-top" alt="{{ $foto->judul }}" style="height: 200px; object-fit: cover;">
                                             <div class="card-body">
                                                 <h6 class="card-title">{{ $foto->judul }}</h6>
                                                 <small class="text-muted">{{ $foto->created_at->format('d M Y') }}</small>

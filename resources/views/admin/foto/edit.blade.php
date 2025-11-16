@@ -45,7 +45,7 @@
                         <div class="mb-3">
                             <label class="form-label">Foto Saat Ini</label>
                             <div>
-                                <img src="{{ Storage::url($foto->file) }}" alt="Foto {{ $foto->galery->post->judul }}" class="img-thumbnail" style="max-width: 200px;">
+                                <img src="{{ $foto->url }}" alt="Foto {{ $foto->galery->post->judul }}" class="img-thumbnail" style="max-width: 200px;">
                             </div>
                         </div>
                         @endif
