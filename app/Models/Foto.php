@@ -27,55 +27,38 @@ class Foto extends Model
             return null;
         }
 
-        // Use Storage::disk('public')->url() which handles URL generation correctly
-        // This will return a URL like: https://domain.com/storage/fotos/filename.jpg
-        $url = Storage::disk('public')->url($this->file);
-        
-        // Parse the URL to properly encode the filename
-        $parsedUrl = parse_url($url);
-        
-        if (!$parsedUrl) {
-            // If parsing fails, return the URL as-is
-            return $url;
+        // Check if the file actually exists before generating URL
+        if (!Storage::disk('public')->exists($this->file)) {
+            // Return null if file doesn't exist to avoid 403/404 errors
+            return null;
         }
+
+        // Get the file path
+        $filePath = $this->file;
         
-        // Extract path components
-        $path = $parsedUrl['path'] ?? '';
+        // Use Laravel's Storage URL generation, which handles encoding
+        $baseUrl = Storage::disk('public')->url('');
         
-        if (empty($path)) {
-            return $url;
-        }
-        
-        // Split path into parts
-        $pathParts = explode('/', trim($path, '/'));
-        
-        if (empty($pathParts)) {
-            return $url;
-        }
-        
-        // Get filename (last part) and directory (all other parts)
+        // Properly encode the file path, especially filenames with spaces
+        // Split the path into directory and filename parts
+        $pathParts = explode('/', $filePath);
         $filename = end($pathParts);
-        $directoryParts = array_slice($pathParts, 0, -1);
+        $directory = implode('/', array_slice($pathParts, 0, -1));
         
-        // URL encode only the filename (spaces and special chars need encoding)
+        // URL encode the filename to handle spaces and special characters
         $encodedFilename = rawurlencode($filename);
         
-        // Rebuild the URL with encoded filename
-        $scheme = isset($parsedUrl['scheme']) ? $parsedUrl['scheme'] . '://' : '';
-        $host = $parsedUrl['host'] ?? '';
-        $port = isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '';
-        $directory = !empty($directoryParts) ? '/' . implode('/', $directoryParts) : '';
-        
-        // Build final URL: scheme://host:port/directory/encoded_filename
-        $finalUrl = $scheme . $host . $port . $directory . '/' . $encodedFilename;
-        
-        // Add query string and fragment if they exist
-        if (isset($parsedUrl['query'])) {
-            $finalUrl .= '?' . $parsedUrl['query'];
+        // Rebuild the path with encoded filename
+        if ($directory) {
+            $encodedPath = $directory . '/' . $encodedFilename;
+        } else {
+            $encodedPath = $encodedFilename;
         }
-        if (isset($parsedUrl['fragment'])) {
-            $finalUrl .= '#' . $parsedUrl['fragment'];
-        }
+        
+        // Combine base URL with encoded path
+        // Remove trailing slash from baseUrl if present, then add encoded path
+        $baseUrl = rtrim($baseUrl, '/');
+        $finalUrl = $baseUrl . '/' . $encodedPath;
         
         return $finalUrl;
     }

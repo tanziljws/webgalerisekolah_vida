@@ -119,7 +119,7 @@
             @else
             <div class="gallery-grid">
                 @foreach($galeries as $galery)
-                    @php($photos = $galery->fotos)
+                    @php($photos = $galery->fotos->filter(fn($f) => $f->url !== null))
                     @php($first = $photos->first())
                     <div class="gallery-card {{ $photos->count() > 1 ? 'has-multi' : '' }}" id="g-{{ $galery->id }}">
                         <div class="gallery-card-img-wrapper">
@@ -187,7 +187,7 @@
   const photos = {};
   @foreach($galeries as $galery)
     photos[{{ $galery->id }}] = [
-      @foreach($galery->fotos as $f)
+      @foreach($galery->fotos->filter(fn($f) => $f->url !== null) as $f)
         @json($f->url){{ !$loop->last ? ',' : '' }}
       @endforeach
     ];

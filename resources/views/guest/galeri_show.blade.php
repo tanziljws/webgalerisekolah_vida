@@ -42,7 +42,7 @@
         <div class="border shadow-sm bg-white" style="border-radius: 16px; overflow: hidden;">
           <div id="detailCarousel" class="carousel slide" data-bs-ride="false">
             <div class="carousel-inner">
-              @forelse($galery->fotos as $idx => $foto)
+              @forelse($galery->fotos->filter(fn($f) => $f->url !== null) as $idx => $foto)
                 <div class="carousel-item {{ $idx === 0 ? 'active' : '' }}">
                   <img src="{{ $foto->url }}" class="d-block w-100" alt="{{ $galery->judul ?? $galery->post->judul }}" data-title="{{ $galery->judul ?? $galery->post->judul }}">
                 </div>
@@ -50,14 +50,15 @@
                 <div class="p-5 text-center text-muted">Tidak ada foto</div>
               @endforelse
             </div>
-            @if($galery->fotos->count() > 1)
+            @php($availableFotos = $galery->fotos->filter(fn($f) => $f->url !== null))
+            @if($availableFotos->count() > 1)
             <div class="carousel-indicators">
-              @foreach($galery->fotos as $idx => $foto)
+              @foreach($availableFotos as $idx => $foto)
                 <button type="button" data-bs-target="#detailCarousel" data-bs-slide-to="{{ $idx }}" class="{{ $idx === 0 ? 'active' : '' }}" aria-label="Foto {{ $idx + 1 }}"></button>
               @endforeach
             </div>
             @endif
-            @if($galery->fotos->count() > 1)
+            @if($availableFotos->count() > 1)
             <button class="carousel-control-prev" type="button" data-bs-target="#detailCarousel" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Prev</span>
@@ -84,8 +85,8 @@
                 <span class="small">{{ $galery->total_comments ?? $galery->comments->count() }}</span>
               </a>
               <button type="button" id="shareBtn" class="btn btn-outline-secondary"><i class="bi bi-share"></i></button>
-              @if($galery->fotos->first())
-              <a class="btn btn-outline-secondary" href="{{ route('galleries.fotos.download', [$galery, $galery->fotos->first()]) }}"><i class="bi bi-download"></i></a>
+              @if($availableFotos->first())
+              <a class="btn btn-outline-secondary" href="{{ route('galleries.fotos.download', [$galery, $availableFotos->first()]) }}"><i class="bi bi-download"></i></a>
               @endif
             </div>
             <form method="POST" action="{{ route('galleries.bookmark', $galery) }}">@csrf
@@ -165,9 +166,10 @@
         </div>
         <div class="row g-3">
           @foreach($recommendations as $g)
+            @php($recFirst = $g->fotos->filter(fn($f) => $f->url !== null)->first())
             <div class="col-6 col-md-4 col-lg-6">
               <a href="{{ route('guest.galeri.show', $g) }}" class="recommendation-card d-block">
-                <img src="{{ $g->fotos->first() ? $g->fotos->first()->url : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="">
+                <img src="{{ $recFirst ? $recFirst->url : 'https://via.placeholder.com/600x400?text=No+Image' }}" alt="">
               </a>
             </div>
           @endforeach
