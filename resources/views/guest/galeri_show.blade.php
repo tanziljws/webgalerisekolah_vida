@@ -4,8 +4,8 @@
 
 @section('content')
 <style>
-  .back-btn-detail { display: inline-flex; align-items: center; gap: 8px; color: #0f172a; text-decoration: none; font-weight: 600; padding: 10px 20px; border-radius: 10px; background: #fff; border: 2px solid #0f172a; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(15,23,42,.1); }
-  .back-btn-detail:hover { background: #0f172a; color: #fff; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(15,23,42,.2); }
+  .back-btn-detail { display: inline-flex; align-items: center; gap: 8px; color: #001f3f; text-decoration: none; font-weight: 600; padding: 10px 20px; border-radius: 10px; background: #fff; border: 2px solid #001f3f; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(0,31,63,.1); }
+  .back-btn-detail:hover { background: #001f3f; color: #fff; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,31,63,.2); }
   .detail-carousel { padding: 20px 16px 16px 16px; }
   .detail-carousel img { border-radius: 16px; max-height: 45vh; object-fit: contain; background: #000; }
   @media (max-width: 991.98px) { 
