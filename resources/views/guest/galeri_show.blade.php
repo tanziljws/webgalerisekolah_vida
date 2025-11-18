@@ -96,7 +96,10 @@
           </div>
           <div id="komentar" class="p-3 border-top">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h6 class="fw-bold mb-0">Komentar ({{ $galery->total_comments ?? $galery->comments->where('parent_id', null)->count() }})</h6>
+              @php
+                $visibleRootComments = $galery->comments->where('status', 'visible')->where('parent_id', null);
+              @endphp
+              <h6 class="fw-bold mb-0">Komentar ({{ $visibleRootComments->count() }})</h6>
               <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#commentsSection" aria-expanded="true">
                 <i class="bi bi-chevron-up" id="toggleIcon"></i>
               </button>
@@ -131,7 +134,7 @@
             @endauth
 
             <div class="comments-list" style="max-height: 50vh; overflow-y:auto;">
-              @forelse($galery->comments->where('parent_id', null)->sortByDesc('created_at') as $comment)
+              @forelse($visibleRootComments->sortByDesc('created_at') as $comment)
                 <div class="comment-item mb-3 pb-3 border-bottom">
                   <div class="d-flex gap-2">
                     <div class="flex-shrink-0">
@@ -144,9 +147,56 @@
                       @endif
                     </div>
                     <div class="flex-grow-1">
-                      <div class="fw-bold small">{{ $comment->user?->name ?? 'Pengguna' }}</div>
+                      <div class="fw-bold small d-flex justify-content-between align-items-center">
+                        <span>{{ $comment->user?->name ?? 'Pengguna' }}</span>
+                        @auth('user')
+                        <div class="d-flex gap-2">
+                          <form method="POST" action="{{ route('reports.store') }}">
+                            @csrf
+                            <input type="hidden" name="type" value="comment">
+                            <input type="hidden" name="target_id" value="{{ $comment->id }}">
+                            <input type="hidden" name="reason" value="Komentar tidak pantas">
+                            <button type="submit" class="btn btn-link p-0 text-danger text-decoration-none small">Laporkan Komentar</button>
+                          </form>
+                          @if($comment->user && $comment->user->id !== auth('user')->id())
+                          <form method="POST" action="{{ route('reports.store') }}">
+                            @csrf
+                            <input type="hidden" name="type" value="user">
+                            <input type="hidden" name="target_id" value="{{ $comment->user->id }}">
+                            <input type="hidden" name="reason" value="Perilaku pengguna tidak pantas">
+                            <button type="submit" class="btn btn-link p-0 text-warning text-decoration-none small">Laporkan Pengguna</button>
+                          </form>
+                          @endif
+                        </div>
+                        @endauth
+                      </div>
                       <div class="text-muted" style="font-size:12px;">{{ $comment->created_at->diffForHumans() }}</div>
                       <p class="mb-1 mt-1">{{ $comment->body }}</p>
+                      @php
+                        $childComments = $galery->comments->where('parent_id', $comment->id)->where('status', 'visible')->sortBy('created_at');
+                      @endphp
+                      @foreach($childComments as $child)
+                        <div class="mt-2 ps-4 border-start">
+                          <div class="d-flex gap-2">
+                            <div class="flex-shrink-0">
+                              @if($child->user?->profile_photo_path)
+                                <img src="{{ asset('storage/'.$child->user->profile_photo_path) }}?v={{ $child->user->updated_at?->timestamp ?? now()->timestamp }}" class="rounded-circle" style="width:32px;height:32px;object-fit:cover;" alt="">
+                              @else
+                                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:32px;height:32px;background:#e2e8f0;color:#64748b;font-weight:700;font-size:12px;">
+                                  {{ strtoupper(substr($child->user?->name ?? 'U',0,1)) }}
+                                </div>
+                              @endif
+                            </div>
+                            <div class="flex-grow-1">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold small">{{ $child->user?->name ?? 'Pengguna' }}</span>
+                                <small class="text-muted">{{ $child->created_at->diffForHumans() }}</small>
+                              </div>
+                              <p class="mb-1">{{ $child->body }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      @endforeach
                     </div>
                   </div>
                 </div>

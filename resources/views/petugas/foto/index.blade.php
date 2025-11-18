@@ -3,6 +3,10 @@
 @section('title', 'Foto - Petugas SMKN 4 BOGOR')
 @section('page-title', 'Foto')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('content')
     <div class="row">
         <div class="col-12 mb-3">
@@ -19,8 +23,14 @@
         @forelse($fotos as $foto)
         <div class="col-sm-6 col-md-4 col-lg-3">
             <div class="card h-100">
-                @if($foto->file && file_exists(public_path('images/gallery/' . $foto->file)))
-                    <img src="{{ asset('images/gallery/' . $foto->file) }}" class="card-img-top" alt="{{ $foto->judul }}" style="height: 200px; object-fit: cover;">
+                @if($foto->file)
+                    @php
+                        // Check if file is stored using Storage (path contains 'fotos/') or public path
+                        $imageUrl = str_contains($foto->file, 'fotos/') 
+                            ? Storage::url($foto->file) 
+                            : asset('images/gallery/' . $foto->file);
+                    @endphp
+                    <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $foto->judul ?? 'Foto' }}" style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'bg-secondary d-flex align-items-center justify-content-center\' style=\'height: 200px;\'><i class=\'fas fa-image fa-3x text-white opacity-50\'></i></div>';">
                 @else
                     <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
                         <i class="fas fa-image fa-3x text-white opacity-50"></i>

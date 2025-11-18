@@ -22,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             return route('user.login');
         });
+
+        $middleware->alias([
+            'ensure.user.active' => \App\Http\Middleware\EnsureUserActive::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

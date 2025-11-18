@@ -3,6 +3,10 @@
 @section('title', 'Edit Foto - Petugas SMKN 4 BOGOR')
 @section('page-title', 'Edit Foto')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -58,9 +62,15 @@
 
                         <div class="mb-3">
                             <label class="form-label">Foto Saat Ini</label>
-                            @if($foto->file && file_exists(public_path('images/gallery/' . $foto->file)))
+                            @if($foto->file)
+                                @php
+                                    // Check if file is stored using Storage (path contains 'fotos/') or public path
+                                    $imageUrl = str_contains($foto->file, 'fotos/') 
+                                        ? Storage::url($foto->file) 
+                                        : asset('images/gallery/' . $foto->file);
+                                @endphp
                                 <div class="card" style="max-width: 300px;">
-                                    <img src="{{ asset('images/gallery/' . $foto->file) }}" class="card-img-top" alt="{{ $foto->judul }}" style="height: 200px; object-fit: cover;">
+                                    <img src="{{ $imageUrl }}" class="card-img-top" alt="{{ $foto->judul ?? 'Foto' }}" style="height: 200px; object-fit: cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<p class=\'text-muted\'>File tidak ditemukan</p>';">
                                 </div>
                             @else
                                 <p class="text-muted">File tidak ditemukan</p>

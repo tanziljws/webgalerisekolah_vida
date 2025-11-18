@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Galery;
 use Illuminate\Http\Request;
+use App\Services\CommentFilterService;
 
 class CommentController extends Controller
 {
+    protected CommentFilterService $filter;
+
+    public function __construct(CommentFilterService $filter)
+    {
+        $this->filter = $filter;
+    }
+
     public function store(Request $request, Galery $galery)
     {
         $userId = auth('user')->id() ?? auth()->id();
@@ -19,13 +27,21 @@ class CommentController extends Controller
             'body' => ['required', 'string', 'min:1'],
         ]);
 
+        $evaluation = $this->filter->evaluate($data['body']);
+
         Comment::create([
             'galery_id' => $galery->id,
             'user_id' => $userId,
-            'body' => $data['body'],
+            'body' => $evaluation['body'],
+            'status' => $evaluation['status'],
+            'moderation_note' => $evaluation['moderation_note'],
         ]);
 
-        session()->flash('success', 'Komentar berhasil ditambahkan!');
+        $message = $evaluation['status'] === 'visible'
+            ? 'Komentar berhasil ditambahkan!'
+            : 'Komentar mengandung kata yang dibatasi dan menunggu peninjauan admin.';
+
+        session()->flash('success', $message);
         return back();
     }
 
@@ -40,14 +56,22 @@ class CommentController extends Controller
             'body' => ['required', 'string', 'min:1'],
         ]);
 
+        $evaluation = $this->filter->evaluate($data['body']);
+
         Comment::create([
             'galery_id' => $comment->galery_id,
             'user_id' => $userId,
             'parent_id' => $comment->id,
-            'body' => $data['body'],
+            'body' => $evaluation['body'],
+            'status' => $evaluation['status'],
+            'moderation_note' => $evaluation['moderation_note'],
         ]);
 
-        session()->flash('success', 'Balasan berhasil ditambahkan!');
+        $message = $evaluation['status'] === 'visible'
+            ? 'Balasan berhasil ditambahkan!'
+            : 'Balasan mengandung kata yang dibatasi dan menunggu peninjauan admin.';
+
+        session()->flash('success', $message);
         return back();
     }
 
